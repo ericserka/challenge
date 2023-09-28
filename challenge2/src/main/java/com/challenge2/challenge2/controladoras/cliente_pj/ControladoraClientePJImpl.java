@@ -35,15 +35,15 @@ public class ControladoraClientePJImpl implements ControladoraClientePJ {
     private final ServicoClientePJ servico;
 
     public ResponseEntity<List<RespostaSelecaoClientePJDTO>> listarTodos() {
-        final List<RespostaSelecaoClientePJDTO> response = this.servico.listarTodos();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        final List<RespostaSelecaoClientePJDTO> resposta = this.servico.listarTodos();
+        return new ResponseEntity<>(resposta, HttpStatus.OK);
     }
 
     public ResponseEntity<RespostaSelecaoClientePJDTO> acharPorId(
             @PathVariable final String id) {
         try {
-            final RespostaSelecaoClientePJDTO response = this.servico.acharPorId(UUID.fromString(id));
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            final RespostaSelecaoClientePJDTO resposta = this.servico.acharPorId(UUID.fromString(id));
+            return new ResponseEntity<>(resposta, HttpStatus.OK);
         } catch (NumberFormatException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     String.format(UUID_INVALIDO_MENSAGEM_ERRO, id));
@@ -63,9 +63,9 @@ public class ControladoraClientePJImpl implements ControladoraClientePJ {
             @PathVariable final String id,
             @RequestBody @Valid final AtualizacaoClientePJDTO atualizacaoClientePJDTO) {
         try {
-            final RespostaAtualizacaoClientePJDTO response = this.servico.atualizar(UUID.fromString(id),
+            final RespostaAtualizacaoClientePJDTO resposta = this.servico.atualizar(UUID.fromString(id),
                     atualizacaoClientePJDTO);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(resposta, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, CONFLITO_MENSAGEM_ERRO);
         } catch (NumberFormatException e) {
@@ -78,8 +78,8 @@ public class ControladoraClientePJImpl implements ControladoraClientePJ {
     public ResponseEntity<RespostaCriacaoClientePJDTO> criar(
             @RequestBody @Valid final CriacaoClientePJDTO criacaoClientePJDTO) {
         try {
-            final RespostaCriacaoClientePJDTO response = this.servico.criar(criacaoClientePJDTO);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            final RespostaCriacaoClientePJDTO resposta = this.servico.criar(criacaoClientePJDTO);
+            return new ResponseEntity<>(resposta, HttpStatus.CREATED);
         } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, CONFLITO_MENSAGEM_ERRO);
         }

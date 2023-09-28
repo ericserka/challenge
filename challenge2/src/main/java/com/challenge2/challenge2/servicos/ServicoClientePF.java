@@ -32,20 +32,29 @@ public class ServicoClientePF {
     private final MapeadorCriacaoClientePF mapeadorCriacao;
     private final MapeadorAtualizacaoClientePF mapeadorAtualizacao;
     private final MapeadorSelecaoClientePF mapeadorSelecao;
+    private final ServicoFila servicoFila;
 
     public RespostaCriacaoClientePFDTO criar(final CriacaoClientePFDTO criacaoClientePFDTO) {
         log.info("Criando cliente PF: {}", criacaoClientePFDTO);
-        return this.mapeadorCriacao
-                .paraDto(this.repositorio.save(this.mapeadorCriacao.paraEntidade(criacaoClientePFDTO)));
+
+        final ClientePF clientePF = this.repositorio.save(this.mapeadorCriacao.paraEntidade(criacaoClientePFDTO));
+        this.servicoFila.enfileirarClientePF(clientePF);
+
+        return this.mapeadorCriacao.paraDto(clientePF);
     }
 
     public RespostaAtualizacaoClientePFDTO atualizar(
             final UUID id,
             final AtualizacaoClientePFDTO atualizacaoClientePFDTO) {
         this.acharEntidadePorId(id);
-        final ClientePF clientePFAtualizado = this.mapeadorAtualizacao.paraEntidade(id, atualizacaoClientePFDTO);
         log.info("Atualizando cliente PF com id={}", id);
-        return this.mapeadorAtualizacao.paraDto(this.repositorio.save(clientePFAtualizado));
+
+        final ClientePF clientePFAtualizado = this.repositorio
+                .save(this.mapeadorAtualizacao.paraEntidade(id, atualizacaoClientePFDTO));
+
+        this.servicoFila.enfileirarClientePF(clientePFAtualizado);
+
+        return this.mapeadorAtualizacao.paraDto(clientePFAtualizado);
     }
 
     public void remover(final UUID id) {

@@ -63,13 +63,13 @@ class ControladoraClientePJTest {
                 this.saveCliente();
                 this.saveCliente();
 
-                final MvcResult response = mockMvc.perform(get("/clientes-pj"))
+                final MvcResult resposta = mockMvc.perform(get("/clientes-pj"))
                                 .andDo(print())
                                 .andExpect(status().isOk())
                                 .andExpect(MockMvcResultMatchers.jsonPath("$.[*].id").isNotEmpty())
                                 .andReturn();
 
-                final String responseBody = response.getResponse().getContentAsString();
+                final String responseBody = resposta.getResponse().getContentAsString();
                 final List<ClientePJ> clientesPJ = objectMapper.readValue(responseBody, List.class);
 
                 assertThat(clientesPJ, hasSize((int) this.repositorioClientePJ.count()));
@@ -79,13 +79,13 @@ class ControladoraClientePJTest {
         void acharPorIdExistente() throws Exception {
                 final UUID id = this.saveCliente().getId();
 
-                final MvcResult response = mockMvc.perform(get("/clientes-pj/" + id))
+                final MvcResult resposta = mockMvc.perform(get("/clientes-pj/" + id))
                                 .andDo(print())
                                 .andExpect(status().isOk())
                                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty())
                                 .andReturn();
 
-                final String responseBody = response.getResponse().getContentAsString();
+                final String responseBody = resposta.getResponse().getContentAsString();
                 final RespostaSelecaoClientePJDTO clientePJ = objectMapper.readValue(responseBody,
                                 RespostaSelecaoClientePJDTO.class);
 
@@ -117,7 +117,7 @@ class ControladoraClientePJTest {
                                 "tester",
                                 "test@teste.com");
 
-                final MvcResult response = mockMvc
+                final MvcResult resposta = mockMvc
                                 .perform(put("/clientes-pj/" + id).content(objectMapper.writeValueAsString(putBody))
                                                 .contentType("application/json"))
                                 .andDo(print())
@@ -125,7 +125,7 @@ class ControladoraClientePJTest {
                                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
                                 .andReturn();
 
-                final String responseBody = response.getResponse().getContentAsString();
+                final String responseBody = resposta.getResponse().getContentAsString();
                 final RespostaAtualizacaoClientePJDTO clientePJAtualizado = objectMapper.readValue(responseBody,
                                 RespostaAtualizacaoClientePJDTO.class);
 
@@ -172,7 +172,7 @@ class ControladoraClientePJTest {
                                 "tester",
                                 "test@teste.com");
 
-                final MvcResult response = mockMvc
+                final MvcResult resposta = mockMvc
                                 .perform(post("/clientes-pj").content(objectMapper.writeValueAsString(postBody))
                                                 .contentType("application/json"))
                                 .andDo(print())
@@ -180,7 +180,7 @@ class ControladoraClientePJTest {
                                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
                                 .andReturn();
 
-                final String responseBody = response.getResponse().getContentAsString();
+                final String responseBody = resposta.getResponse().getContentAsString();
                 final RespostaCriacaoClientePJDTO clientePJ = objectMapper.readValue(responseBody,
                                 RespostaCriacaoClientePJDTO.class);
 

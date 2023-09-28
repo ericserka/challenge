@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,7 +32,6 @@ import com.challenge2.challenge2.dtos.cliente_pj.respostas.RespostaAtualizacaoCl
 import com.challenge2.challenge2.dtos.cliente_pj.respostas.RespostaCriacaoClientePJDTO;
 import com.challenge2.challenge2.dtos.cliente_pj.respostas.RespostaSelecaoClientePJDTO;
 import com.challenge2.challenge2.repositorios.RepositorioClientePJ;
-import com.challenge2.challenge2.servicos.ServicoClientePJ;
 import com.challenge2.challenge2.utilitarios.UtilitariosGerais;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,6 +45,8 @@ class ServicoClientePJTest {
         private MapeadorAtualizacaoClientePJ mapeadorAtualizacao;
         @Mock
         private MapeadorSelecaoClientePJ mapeadorSelecao;
+        @Mock
+        private ServicoFila servicoFila;
 
         @InjectMocks
         private ServicoClientePJ servico;
@@ -140,6 +142,8 @@ class ServicoClientePJTest {
                 when(this.mapeadorAtualizacao.paraEntidade(id, atualizacaoClientePJDTO))
                                 .thenReturn(clientePJAtualizado);
                 when(this.repositorio.save(clientePJAtualizado)).thenReturn(clientePJAtualizado);
+                doNothing().when(this.servicoFila).enfileirarClientePJ(clientePJAtualizado);
+
                 when(this.mapeadorAtualizacao.paraDto(clientePJAtualizado)).thenReturn(respostaAtualizacaoClientePJDTO);
 
                 final RespostaAtualizacaoClientePJDTO resultado = this.servico.atualizar(id, atualizacaoClientePJDTO);
@@ -264,6 +268,8 @@ class ServicoClientePJTest {
 
                 when(this.mapeadorCriacao.paraEntidade(criacaoClientePJDTO)).thenReturn(clientePJCriado);
                 when(this.repositorio.save(clientePJCriado)).thenReturn(clientePJCriado);
+                doNothing().when(this.servicoFila).enfileirarClientePJ(clientePJCriado);
+
                 when(this.mapeadorCriacao.paraDto(clientePJCriado)).thenReturn(respostaCriacaoClientePJDTO);
 
                 final RespostaCriacaoClientePJDTO resultado = this.servico.criar(criacaoClientePJDTO);

@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,7 +32,6 @@ import com.challenge2.challenge2.dtos.cliente_pf.respostas.RespostaAtualizacaoCl
 import com.challenge2.challenge2.dtos.cliente_pf.respostas.RespostaCriacaoClientePFDTO;
 import com.challenge2.challenge2.dtos.cliente_pf.respostas.RespostaSelecaoClientePFDTO;
 import com.challenge2.challenge2.repositorios.RepositorioClientePF;
-import com.challenge2.challenge2.servicos.ServicoClientePF;
 import com.challenge2.challenge2.utilitarios.UtilitariosGerais;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,6 +45,8 @@ public class ServicoClientePFTest {
         private MapeadorAtualizacaoClientePF mapeadorAtualizacao;
         @Mock
         private MapeadorSelecaoClientePF mapeadorSelecao;
+        @Mock
+        private ServicoFila servicoFila;
 
         @InjectMocks
         private ServicoClientePF servico;
@@ -114,6 +116,8 @@ public class ServicoClientePFTest {
                 when(this.mapeadorAtualizacao.paraEntidade(id, atualizacaoClientePFDTO))
                                 .thenReturn(clientePFAtualizado);
                 when(this.repositorio.save(clientePFAtualizado)).thenReturn(clientePFAtualizado);
+                doNothing().when(this.servicoFila).enfileirarClientePF(clientePFAtualizado);
+
                 when(this.mapeadorAtualizacao.paraDto(clientePFAtualizado)).thenReturn(respostaAtualizacaoClientePFDTO);
 
                 final RespostaAtualizacaoClientePFDTO resultado = this.servico.atualizar(id, atualizacaoClientePFDTO);
@@ -205,6 +209,8 @@ public class ServicoClientePFTest {
 
                 when(this.mapeadorCriacao.paraEntidade(criacaoClientePFDTO)).thenReturn(clientePFCriado);
                 when(this.repositorio.save(clientePFCriado)).thenReturn(clientePFCriado);
+                doNothing().when(this.servicoFila).enfileirarClientePF(clientePFCriado);
+
                 when(this.mapeadorCriacao.paraDto(clientePFCriado)).thenReturn(respostaCriacaoClientePFDTO);
 
                 final RespostaCriacaoClientePFDTO resultado = this.servico.criar(criacaoClientePFDTO);
