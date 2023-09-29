@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import com.challenge3.challenge3.dominio.cliente_pf.ClientePF;
 import com.challenge3.challenge3.dominio.cliente_pj.ClientePJ;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Cliente {
     private final UUID id;
 
