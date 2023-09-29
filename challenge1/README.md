@@ -4,5 +4,7 @@ Apesar dos clientes PF (pessoa física) e PJ (pessoa jurídica) terem alguns dad
 
 A razão disso é que um mesmo email pode ser tanto Cliente PF quanto cliente PJ. Além disso, um email pode pertencer a vários Clientes PJ, o que também faz sentido numa aplicação real, já que empresas de mesmo dono podem ter o mesmo email para contato.
 
+- Foi utilizado o banco de dados em memória H2 para a persistência dos dados, o que significa que todos dados serão perdidos ao encerrar a aplicação.
+
 - Para acessar o swagger, basta compilar a aplicação e abrir a url [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html) no seu navegador. É possível testar os endpoints por lá, além de ter documentado as entradas e saídas possíveis.
 - A aplicação contou com cobertura de 90% de testes, conforme mostra a figura `cobertura_testes_1.jpg` no diretório raíz do projeto.
