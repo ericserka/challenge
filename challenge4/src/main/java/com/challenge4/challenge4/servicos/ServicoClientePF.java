@@ -33,12 +33,14 @@ public class ServicoClientePF {
     private final MapeadorAtualizacaoClientePF mapeadorAtualizacao;
     private final MapeadorSelecaoClientePF mapeadorSelecao;
     private final ServicoFila servicoFila;
+    private final ServicoRedis servicoRedis;
 
     public RespostaCriacaoClientePFDTO criar(final CriacaoClientePFDTO criacaoClientePFDTO) {
         log.info("Criando cliente PF: {}", criacaoClientePFDTO);
 
         final ClientePF clientePF = this.repositorio.save(this.mapeadorCriacao.paraEntidade(criacaoClientePFDTO));
         this.servicoFila.enfileirarClientePF(clientePF);
+        this.servicoRedis.salvarClientePF(clientePF);
 
         return this.mapeadorCriacao.paraDto(clientePF);
     }
@@ -53,6 +55,7 @@ public class ServicoClientePF {
                 .save(this.mapeadorAtualizacao.paraEntidade(id, atualizacaoClientePFDTO));
 
         this.servicoFila.enfileirarClientePF(clientePFAtualizado);
+        this.servicoRedis.salvarClientePF(clientePFAtualizado);
 
         return this.mapeadorAtualizacao.paraDto(clientePFAtualizado);
     }
@@ -60,6 +63,7 @@ public class ServicoClientePF {
     public void remover(final UUID id) {
         final ClientePF clientePF = this.acharEntidadePorId(id);
         log.info("Removendo cliente PF com id={}", id);
+        this.servicoRedis.deletar(id.toString());
         this.repositorio.delete(clientePF);
     }
 

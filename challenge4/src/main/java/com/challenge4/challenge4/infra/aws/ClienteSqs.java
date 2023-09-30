@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -26,20 +27,26 @@ import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 @Component
 @Slf4j
 public class ClienteSqs {
-    private final SqsClient sqsClient;
+    private SqsClient sqsClient;
+    private ObjectMapper objectMapper;
 
     @Value("${aws.sqs.queue-url}")
     private String urlFila;
 
-    private final ObjectMapper objectMapper;
+    @Value("${aws.accessKeyId}")
+    private String accessKeyId;
 
-    public ClienteSqs() {
+    @Value("${aws.secretKey}")
+    private String secretKey;
+
+    @PostConstruct
+    public void postConstructClienteSqs() {
         this.objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
         this.sqsClient = SqsClient.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create("AKIASMQW37VBCEHZ5H5E", "rkhIMi/TaZ4dEsu9v5pGyxSzhNoxj4tl/nvUEyDq")))
+                        AwsBasicCredentials.create(accessKeyId, secretKey)))
                 .region(Region.US_EAST_1).build();
     }
 
